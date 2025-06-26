@@ -1,14 +1,24 @@
+# IT-Asset-Management/assets/reports.py
 from django.http import HttpResponse
 from django.template.loader import render_to_string
-from .models import Asset
 from .risk_assessment import assess_all_assets
 import json
+from .models import Asset, RiskScanResult
 
 def generate_asset_report():
-    """Generate comprehensive asset report"""
+    """Generate comprehensive asset report using stored scan results (no live scanning)"""
     assets = Asset.objects.all()
-    risk_results = assess_all_assets()
-    
+    risk_results_qs = RiskScanResult.objects.select_related('asset').all()
+
+    # Build a list of dicts similar to what was returned by assess_all_assets
+    risk_results = []
+    for rr in risk_results_qs:
+        risk_results.append({
+            'asset': rr.asset,
+            'risk_score': rr.risk_score,
+            'risk_level': rr.risk_level,
+            'vulnerabilities': rr.vulnerabilities,
+        })
     # Asset statistics
     total_assets = assets.count()
     asset_types = {}
@@ -39,6 +49,7 @@ def generate_asset_report():
     }
     
     return report_data
+
 
 def export_json_report(request):
     """Export report as JSON"""

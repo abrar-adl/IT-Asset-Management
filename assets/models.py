@@ -12,23 +12,14 @@ class Asset(models.Model):
     ]
     
     name = models.CharField(max_length=100)
-
     ip_address = models.GenericIPAddressField(unique=True, null=True, blank=True)
-
     asset_type = models.CharField(max_length=100, choices=ASSET_TYPES, default='workstation')
-
     manufacturer = models.CharField(max_length=100, blank=True, default='Unknown')
-
     discovered_date = models.DateTimeField(default=timezone.now)
-
     network_range = models.CharField(max_length=50, blank=True, null=True, default='unknown')
-
     mac_address = models.CharField(max_length=17, blank=True, null=True, default='')
-
     model = models.CharField(max_length=50, blank=True, null=True, default='')
-
     serial_number = models.CharField(max_length=50, blank=True, null=True, default='')
-
     location = models.CharField(max_length=100, blank=True, null=True, default='')
 
     STATUS_CHOICES = [
@@ -49,7 +40,6 @@ class Asset(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.asset_type})"
-
 
 class ScanLog(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)

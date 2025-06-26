@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from typing import List, Dict, Optional, Tuple
 import subprocess
 import socket
-import netifaces
+import netiface
 import ipaddress
 from typing import Optional
 
