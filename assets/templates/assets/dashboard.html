@@ -1,0 +1,449 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IT Asset Management System</title>
+    
+    <!-- Bootstrap 5.3 and FontAwesome 6.4 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    
+    <style>
+        :root {
+            --sidebar-width: 250px;
+            --sidebar-collapsed-width: 60px;
+            --navbar-height: 70px;
+            --primary-dark: #1a1d23;
+            --secondary-dark: #2c3e50;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--navbar-height);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+            border-bottom: 2px solid var(--accent-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1100;
+            padding: 0 1rem;
+            display: flex;
+            align-items: center;
+            color: white;
+        }
+
+        .navbar .btn {
+            color: white;
+            border-color: white;
+        }
+
+        .navbar .btn:hover {
+            color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white !important;
+            margin-left: 1rem;
+            user-select: none;
+        }
+
+        .navbar-brand img {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .navbar-user {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1rem;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: var(--navbar-height);
+            left: 0;
+            height: calc(100vh - var(--navbar-height));
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            overflow-x: hidden;
+            transition: width var(--transition-speed) ease;
+            z-index: 1050;
+        }
+
+        .sidebar.collapsed {
+            width: var(--sidebar-collapsed-width);
+        }
+
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.85);
+            padding: 0.75rem 1.25rem;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            border-radius: 0 25px 25px 0;
+            margin: 0.25rem 1rem;
+            transition: all var(--transition-speed) ease;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .sidebar .nav-link:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .sidebar .nav-link.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .sidebar .nav-link i {
+            width: 20px;
+            text-align: center;
+            margin-right: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .sidebar.collapsed .nav-link .nav-text {
+            opacity: 0;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .nav-text {
+            transition: opacity var(--transition-speed) ease;
+        }
+
+        /* Content */
+        .content {
+            margin-left: var(--sidebar-width);
+            margin-top: var(--navbar-height);
+            padding: 2rem;
+            min-height: calc(100vh - var(--navbar-height));
+            transition: margin-left var(--transition-speed) ease;
+        }
+
+        .content.collapsed {
+            margin-left: var(--sidebar-collapsed-width);
+        }
+
+        /* Cards */
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-color) 0%, #2980b9 100%);
+            border: none;
+            font-weight: 600;
+            padding: 0.6rem 1.75rem;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        /* Table */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .table thead {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+            color: white;
+        }
+
+        .table thead th {
+            border: none;
+            vertical-align: middle;
+        }
+
+        /* Status badges */
+        .status-cell {
+            min-width: 100px;
+        }
+
+        /* Alerts */
+        .alert {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: var(--sidebar-collapsed-width);
+            }
+            .sidebar.collapsed {
+                width: var(--sidebar-collapsed-width);
+            }
+            .sidebar .nav-link .nav-text {
+                opacity: 0;
+                pointer-events: none;
+                user-select: none;
+            }
+            .content {
+                margin-left: var(--sidebar-collapsed-width);
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <button class="btn btn-outline-light" id="sidebarToggle" aria-label="Toggle sidebar">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <a href="#" class="navbar-brand">
+            <img src="{% static 'images/logo.png' %}" alt="Logo" />
+            Asset Management
+        </a>
+
+        <div class="navbar-user">
+            {% if user.is_authenticated %}
+                <span><i class="fas fa-user me-2"></i>{{ user.username }}</span>
+                <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-light">
+                    <i class="fas fa-sign-out-alt me-1"></i>Logout
+                </a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar collapsed" id="sidebar">
+        <nav class="nav flex-column mt-3">
+            <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                <i class="fas fa-desktop"></i>
+                <span class="nav-text">Assets</span>
+            </a>
+            <a href="{% url 'risk_dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'risk_dashboard' %}active{% endif %}">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span class="nav-text">Risk</span>
+            </a>
+            <a href="{% url 'lifecycle_dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'lifecycle_dashboard' %}active{% endif %}">
+                <i class="fas fa-recycle"></i>
+                <span class="nav-text">Lifecycle</span>
+            </a>
+            <a href="{% url 'reports' %}" class="nav-link {% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
+                <i class="fas fa-chart-bar"></i>
+                <span class="nav-text">Reports</span>
+            </a>
+            {% if user.is_staff %}
+            <a href="{% url 'admin:index' %}" class="nav-link" title="Admin">
+                <i class="fas fa-cog"></i>
+                <span class="nav-text">Admin</span>
+            </a>
+            {% endif %}
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <main class="content collapsed" id="content">
+
+        <!-- Alert messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    <i class="fas fa-info-circle me-2"></i>{{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if user.is_staff %}
+        <div class="alert alert-info mb-4">
+            Current Network Subnet: <strong>{{ current_subnet }}</strong>
+        </div>
+
+        <form method="get" class="mb-4">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-6">
+                    <select name="network_range" onchange="this.form.submit()" class="form-select">
+                        <option value="">All Networks</option>
+                        {% for network in networks %}
+                            <option value="{{ network }}" {% if selected_network == network %}selected{% endif %}>
+                                {{ network }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </form>
+        {% endif %}
+
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Assets</h5>
+                        <h2 class="text-primary mb-0">{{ asset_count }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Asset Types</h5>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for type, count in asset_types.items %}
+                                <span class="badge bg-secondary">{{ type|title }}: {{ count }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Assets</h5>
+                <form method="post" action="{% url 'run_scan' %}" class="m-0">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search me-1"></i>Run Network Scan
+                    </button>
+                </form>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>IP Address</th>
+                                <th>Manufacturer</th>
+                                <th class="status-cell">Status</th>
+                                <th>Discovered</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for asset in assets %}
+                            <tr>
+                                <td>{{ asset.name }}</td>
+                                <td>{{ asset.asset_type|title }}</td>
+                                <td>{{ asset.ip_address }}</td>
+                                <td>{{ asset.manufacturer }}</td>
+                                <td class="status-cell">
+                                    {% if asset.status == 'active' %}
+                                        <span class="badge bg-success">Active</span>
+                                    {% elif asset.status == 'inactive' %}
+                                        <span class="badge bg-secondary">Inactive</span>
+                                    {% elif asset.status == 'retired' %}
+                                        <span class="badge bg-warning text-dark">Retired</span>
+                                    {% elif asset.status == 'faulty' %}
+                                        <span class="badge bg-danger">Faulty</span>
+                                    {% else %}
+                                        <span class="badge bg-info">{{ asset.status|title }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ asset.discovered_date|date:"M d, Y" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    <i class="fas fa-inbox fa-2x mb-2"></i><br />
+                                    No assets found
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Bootstrap and JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        const content = document.getElementById('content');
+
+        // Restore sidebar state from localStorage
+        const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+        if (sidebarCollapsed) {
+            sidebar.classList.add('collapsed');
+            content.classList.add('collapsed');
+        } else {
+            sidebar.classList.remove('collapsed');
+            content.classList.remove('collapsed');
+        }
+
+        // Toggle sidebar
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            content.classList.toggle('collapsed');
+            localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed').toString());
+        });
+
+        // Auto-dismiss alerts after 5 seconds
+        document.querySelectorAll('.alert').forEach(alert => {
+            setTimeout(() => {
+                if (alert.classList.contains('show')) {
+                    const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+                    bsAlert.close();
+                }
+            }, 5000);
+        });
+    });
+    </script>
+
+</body>
+</html>

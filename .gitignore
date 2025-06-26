@@ -1,0 +1,19 @@
+# Ignore virtual environments
+venv/
+ENV/
+env/
+
+# Bytecode
+__pycache__/
+*.py[cod]
+
+# Django
+*.sqlite3
+*.log
+
+# VSCode
+.vscode/
+
+# System files
+.DS_Store
+Thumbs.db
