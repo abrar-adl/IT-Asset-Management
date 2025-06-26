@@ -551,8 +551,8 @@
                                 {% endif %}
                             </td>
                             <td>
-                                {% if result.last_scan %}
-                                    <small class="text-muted">{{ result.last_scan|date:"M d, Y H:i" }}</small>
+                                {% if result.scanned_at %}
+                                    <small class="text-muted">{{ result.scanned_at|date:"M d, Y H:i" }}</small>
                                 {% else %}
                                     <small class="text-muted">Never scanned</small>
                                 {% endif %}
