@@ -1,3 +1,4 @@
+# IT-Asset-Management/assets/risk_assessment.py
 from datetime import datetime, timedelta
 import json
 import requests
@@ -213,7 +214,7 @@ class RiskAssessment:
         
         all_vulnerabilities = []
         
-#        for product, version in services:
+#       for product, version in services:
         for service in services:
             product = service.get('product', '')
             version = service.get('version', '')
@@ -227,9 +228,7 @@ class RiskAssessment:
             # Small delay to be respectful to APIs
             time.sleep(0.5)
         
-        # Remove duplicates and return
-
-        return vulns
+        return list(set(all_vulnerabilities))  # ✅ FIXED LINE
 
 
 
